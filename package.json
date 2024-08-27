@@ -1,0 +1,23 @@
+{
+  "name": "coffee-shop-customer-api",
+  "version": "0.1.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node ./src/server",
+    "start:dev": "nodemon ./src/server",
+    "build:patch": "npm version patch",
+    "build:minor": "npm version minor",
+    "build:major": "npm version major"
+  },
+  "keywords": [],
+  "author": "Bibbeep",
+  "license": "ISC",
+  "description": "First minor of the Coffee Shop Customer API. This version will cover the very basic of CRUD operation.",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.10",
+    "nanoid": "^3.3.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

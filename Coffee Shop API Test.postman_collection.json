@@ -1,0 +1,1014 @@
+{
+	"info": {
+		"_postman_id": "f71bf957-8d57-48d4-9f3b-fcb42abd959d",
+		"name": "Coffee Shop API Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All Menus",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('status code should be 200', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('response header Content-Type should be application/json', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body object should have correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.haveOwnProperty('status');\r",
+							"    pm.expect(responseJson).to.haveOwnProperty('data');\r",
+							"\r",
+							"    pm.expect(responseJson.status).to.equals('success');\r",
+							"    pm.expect(responseJson.data).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body data object should have an array menus and contains 13 items', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const { data } = responseJson;\r",
+							"\r",
+							"    pm.expect(data).to.haveOwnProperty('menus');\r",
+							"    pm.expect(data.menus).to.be.an('array');\r",
+							"    pm.expect(data.menus).to.lengthOf(13);\r",
+							"});\r",
+							"\r",
+							"pm.test('the menus should have contains only name and price property', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const { data: { menus } } = responseJson;\r",
+							"\r",
+							"    menus.forEach((menu) => {\r",
+							"        pm.expect(Object.keys(menu)).to.lengthOf(2);\r",
+							"        pm.expect(menu).to.haveOwnProperty('name');\r",
+							"        pm.expect(menu).to.haveOwnProperty('price');\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/menus",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"menus"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Order With Complete Data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 201 value', () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should have the correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('success');\r",
+							"\r",
+							"    pm.expect(responseJson).to.ownProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Pesanan berhasil ditambahkan');\r",
+							"\r",
+							"    pm.expect(responseJson).to.ownProperty('data');\r",
+							"    pm.expect(responseJson.data).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body data should have orderId and totalPrice property and not equal to empty', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const { data } = responseJson;\r",
+							"\r",
+							"    pm.expect(data).to.ownProperty('orderId');\r",
+							"    pm.expect(data).to.ownProperty('totalPrice');\r",
+							"    pm.expect(data.orderId).to.not.equals('');\r",
+							"    pm.expect(data.totalPrice).to.not.equals('');\r",
+							"\r",
+							"    pm.environment.set('orderId', data.orderId);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"name\": \"Avocado Coffee\",\r\n            \"quantity\": 1,\r\n            \"description\": \"Es nya sedikit\"\r\n        },\r\n        {\r\n            \"name\": \"Chicken Katsu Teriyaki\",\r\n            \"quantity\": 1,\r\n            \"description\": \"\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Order With Unlisted Menu",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 404 value', () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should have the correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('fail');\r",
+							"\r",
+							"    pm.expect(responseJson).to.ownProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Pesanan gagal ditambahkan. Item yang diminta tidak ditemukan');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"name\": \"Mango Coffee\",\r\n            \"quantity\": 2,\r\n            \"description\": \"\"\r\n        },\r\n        {\r\n            \"name\": \"Chicken Katsu Teriyaki\",\r\n            \"quantity\": 1,\r\n            \"description\": \"\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Order With Unavailable Menu",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 400 value', () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should have the correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('fail');\r",
+							"\r",
+							"    pm.expect(responseJson).to.ownProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Pesanan gagal ditambahkan. Item sedang tidak tersedia');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"name\": \"Classic Coffee Latte\",\r\n            \"quantity\": 1,\r\n            \"description\": \"panas\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('status code should be 200', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('response header Content-Type should be application/json', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body object should have correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.haveOwnProperty('status');\r",
+							"    pm.expect(responseJson).to.haveOwnProperty('data');\r",
+							"\r",
+							"    pm.expect(responseJson.status).to.equals('success');\r",
+							"    pm.expect(responseJson.data).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body data object should have an array orders and contains 1 item', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const { data } = responseJson;\r",
+							"\r",
+							"    pm.expect(data).to.haveOwnProperty('orders');\r",
+							"    pm.expect(data.orders).to.be.an('array');\r",
+							"    pm.expect(data.orders).to.lengthOf(1);\r",
+							"});\r",
+							"\r",
+							"pm.test('the orders should have contains only orderId, items, and totalPrice property', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const { data: { orders } } = responseJson;\r",
+							"\r",
+							"    orders.forEach((order) => {\r",
+							"        pm.expect(Object.keys(order)).to.lengthOf(3);\r",
+							"        pm.expect(order).to.haveOwnProperty('orderId');\r",
+							"        pm.expect(order).to.haveOwnProperty('items');\r",
+							"        pm.expect(order).to.haveOwnProperty('totalPrice');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.test('the orders array should have objects with array items property and contains 2 item', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const { data: { orders } } = responseJson;\r",
+							"\r",
+							"    orders.forEach((order) => {\r",
+							"        pm.expect(order).to.haveOwnProperty('items');\r",
+							"        pm.expect(order.items).to.be.an('array');\r",
+							"        pm.expect(order.items).to.lengthOf(2);\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Detailed Order With Correct Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('status code should be 200', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('response header Content-Type should be application/json', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body object should have correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.haveOwnProperty('status');\r",
+							"    pm.expect(responseJson).to.haveOwnProperty('data');\r",
+							"\r",
+							"    pm.expect(responseJson.status).to.equals('success');\r",
+							"    pm.expect(responseJson.data).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('the orders should have contains orderId, items, createdAt, modifiedAt, and totalPrice property', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const { data } = responseJson;\r",
+							"\r",
+							"    pm.expect(Object.keys(data)).to.lengthOf(5);\r",
+							"    pm.expect(data).to.haveOwnProperty('orderId');\r",
+							"    pm.expect(data).to.haveOwnProperty('items');\r",
+							"    pm.expect(data).to.haveOwnProperty('createdAt');\r",
+							"    pm.expect(data).to.haveOwnProperty('modifiedAt');\r",
+							"    pm.expect(data).to.haveOwnProperty('totalPrice');\r",
+							"});\r",
+							"\r",
+							"pm.test('the array items property should have contains 2 item', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const { data: { items } } = responseJson;\r",
+							"\r",
+							"    pm.expect(items).to.be.an('array');\r",
+							"    pm.expect(items).to.lengthOf(2);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/orders/{{orderId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Detailed Order With Incorrect Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 200 value', () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should have the correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.have.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('fail');\r",
+							"    pm.expect(responseJson).to.have.ownProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Pesanan tidak ditemukan. Mohon isi orderId yang tepat');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/orders/{{incorrectOrderId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders",
+						"{{incorrectOrderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Order With Correct Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 200 value', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals(\"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should have correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.have.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('success');\r",
+							"    pm.expect(responseJson).to.have.ownProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Pesanan berhasil diubah');\r",
+							"});\r",
+							"\r",
+							"pm.test('when request the updated order', () => {\r",
+							"    const orderId = pm.environment.get('orderId');\r",
+							"    pm.sendRequest(`http://localhost:5000/orders/${orderId}`, (error, response) => {\r",
+							"        if (!error) {\r",
+							"            pm.test('then the updated order should contain the latest data', () => {\r",
+							"                const responseJson = response.json();\r",
+							"                const { data: { items, totalPrice } } = responseJson;\r",
+							"\r",
+							"                const expectedItems = [\r",
+							"                    {\r",
+							"                        'name': 'Avocado Coffee',\r",
+							"                        'quantity': 3,\r",
+							"                        'description': 'Es nya lebih banyak'\r",
+							"                    },\r",
+							"                    {\r",
+							"                        'name': 'Chicken Katsu Teriyaki',\r",
+							"                        'quantity': 1,\r",
+							"                        'description': 'Nasinya dikurangin'\r",
+							"                    }\r",
+							"                ];\r",
+							"                const expectedTotalPrice = 152000;\r",
+							"\r",
+							"                pm.expect(items).to.eqls(expectedItems);\r",
+							"                pm.expect(totalPrice).to.equals(expectedTotalPrice);\r",
+							"            });\r",
+							"        }\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"name\": \"Avocado Coffee\",\r\n            \"quantity\": 3,\r\n            \"description\": \"Es nya lebih banyak\"\r\n        },\r\n        {\r\n            \"name\": \"Chicken Katsu Teriyaki\",\r\n            \"quantity\": 1,\r\n            \"description\": \"Nasinya dikurangin\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/orders/{{orderId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Order With Incorrect Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 404 value', () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals(\"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should have correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.have.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('fail');\r",
+							"    pm.expect(responseJson).to.have.ownProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Pesanan tidak ditemukan');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"name\": \"Avocado Coffee\",\r\n            \"quantity\": 3,\r\n            \"description\": \"Es nya lebih banyak\"\r\n        },\r\n        {\r\n            \"name\": \"Chicken Katsu Teriyaki\",\r\n            \"quantity\": 1,\r\n            \"description\": \"Nasinya dikurangin\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/orders/{{incorrectOrderId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders",
+						"{{incorrectOrderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Order Without name Property",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 400 value', () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals(\"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should have correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.have.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('fail');\r",
+							"    pm.expect(responseJson).to.have.ownProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Pesanan gagal diubah. Mohon isi nama item');\r",
+							"});\r",
+							"\r",
+							"pm.test('when request the order', () => {\r",
+							"    const orderId = pm.environment.get('orderId');\r",
+							"    pm.sendRequest(`http://localhost:5000/orders/${orderId}`, (error, response) => {\r",
+							"        if (!error) {\r",
+							"            pm.test('then the order should not contain the invalid data', () => {\r",
+							"                const responseJson = response.json();\r",
+							"                const { data: { items, totalPrice } } = responseJson;\r",
+							"\r",
+							"                const expectedItems = [\r",
+							"                    {\r",
+							"                        'name': 'Avocado Coffee',\r",
+							"                        'quantity': 3,\r",
+							"                        'description': 'Es nya lebih banyak'\r",
+							"                    },\r",
+							"                    {\r",
+							"                        'name': 'Chicken Katsu Teriyaki',\r",
+							"                        'quantity': 1,\r",
+							"                        'description': 'Nasinya dikurangin'\r",
+							"                    }\r",
+							"                ];\r",
+							"                const expectedTotalPrice = 152000;\r",
+							"\r",
+							"                pm.expect(items).to.eqls(expectedItems);\r",
+							"                pm.expect(totalPrice).to.equals(expectedTotalPrice);\r",
+							"            });\r",
+							"        }\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"quantity\": 3,\r\n            \"description\": \"Es nya lebih banyak\"\r\n        },\r\n        {\r\n            \"quantity\": 1,\r\n            \"description\": \"Nasinya dikurangin\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/orders/{{orderId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Order With Unlisted Menu",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 404 value', () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals(\"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should have correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.have.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('fail');\r",
+							"    pm.expect(responseJson).to.have.ownProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Pesanan gagal diubah. Mohon isi nama item yang benar');\r",
+							"});\r",
+							"\r",
+							"pm.test('when request the order', () => {\r",
+							"    const orderId = pm.environment.get('orderId');\r",
+							"    pm.sendRequest(`http://localhost:5000/orders/${orderId}`, (error, response) => {\r",
+							"        if (!error) {\r",
+							"            pm.test('then the order should not contain the unlisted item', () => {\r",
+							"                const responseJson = response.json();\r",
+							"                const { data: { items, totalPrice } } = responseJson;\r",
+							"\r",
+							"                const expectedItems = [\r",
+							"                    {\r",
+							"                        'name': 'Avocado Coffee',\r",
+							"                        'quantity': 3,\r",
+							"                        'description': 'Es nya lebih banyak'\r",
+							"                    },\r",
+							"                    {\r",
+							"                        'name': 'Chicken Katsu Teriyaki',\r",
+							"                        'quantity': 1,\r",
+							"                        'description': 'Nasinya dikurangin'\r",
+							"                    }\r",
+							"                ];\r",
+							"                const expectedTotalPrice = 152000;\r",
+							"\r",
+							"                pm.expect(items).to.eqls(expectedItems);\r",
+							"                pm.expect(totalPrice).to.equals(expectedTotalPrice);\r",
+							"            });\r",
+							"        }\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"name\": \"Bakso SS\",\r\n            \"quantity\": 1,\r\n            \"description\": \"Saya aslinya tidak ada\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/orders/{{orderId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Order With Unavailable Amount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 400 value', () => {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals(\"application/json; charset=utf-8\");\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should have correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.have.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('fail');\r",
+							"    pm.expect(responseJson).to.have.ownProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Pesanan gagal diubah. Jumlah item yang diminta tidak tersedia');\r",
+							"});\r",
+							"\r",
+							"pm.test('when request the order', () => {\r",
+							"    const orderId = pm.environment.get('orderId');\r",
+							"    pm.sendRequest(`http://localhost:5000/orders/${orderId}`, (error, response) => {\r",
+							"        if (!error) {\r",
+							"            pm.test('then the order should not contain the latest data', () => {\r",
+							"                const responseJson = response.json();\r",
+							"                const { data: { items, totalPrice } } = responseJson;\r",
+							"\r",
+							"                const expectedItems = [\r",
+							"                    {\r",
+							"                        'name': 'Avocado Coffee',\r",
+							"                        'quantity': 3,\r",
+							"                        'description': 'Es nya lebih banyak'\r",
+							"                    },\r",
+							"                    {\r",
+							"                        'name': 'Chicken Katsu Teriyaki',\r",
+							"                        'quantity': 1,\r",
+							"                        'description': 'Nasinya dikurangin'\r",
+							"                    }\r",
+							"                ];\r",
+							"                const expectedTotalPrice = 152000;\r",
+							"\r",
+							"                pm.expect(items).to.eqls(expectedItems);\r",
+							"                pm.expect(totalPrice).to.equals(expectedTotalPrice);\r",
+							"            });\r",
+							"        }\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": [\r\n        {\r\n            \"name\": \"Avocado Coffee\",\r\n            \"quantity\": 4,\r\n            \"description\": \"Es nya lebih banyak\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/orders/{{orderId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Order With Correct Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 200 value', () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should have correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.have.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('success');\r",
+							"    pm.expect(responseJson).to.have.ownProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Pesanan berhasil dihapus');\r",
+							"});\r",
+							"\r",
+							"pm.test('when request the deleted order', () => {\r",
+							"    const orderId = pm.environment.get('orderId');\r",
+							"    pm.sendRequest(`http://localhost:5000/orders/${orderId}`, (error, response) => {\r",
+							"        if (!error) {\r",
+							"            pm.test('the deleted order should be not found', () => {\r",
+							"                pm.expect(response.code).to.equals(404);\r",
+							"\r",
+							"                const responseJson = response.json();\r",
+							"                pm.expect(responseJson.status).to.equals('fail');\r",
+							"                pm.expect(responseJson.message).to.equals('Pesanan tidak ditemukan. Mohon isi orderId yang tepat');\r",
+							"            });\r",
+							"        }\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/orders/{{orderId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Order With Incorrect Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('response status code should have 404 value', () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test('response Content-Type header should have application/json value', () => {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should be an object', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('response body should have correct property and value', () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseJson).to.have.ownProperty('status');\r",
+							"    pm.expect(responseJson.status).to.equals('fail');\r",
+							"    pm.expect(responseJson).to.have.ownProperty('message');\r",
+							"    pm.expect(responseJson.message).to.equals('Pesanan tidak ditemukan');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/orders/{{incorrectOrderId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"orders",
+						"{{incorrectOrderId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
